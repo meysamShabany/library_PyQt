@@ -142,6 +142,7 @@ class Ui_MainWindow(object):
 "font-weight: bold;\n"
 "\n"
 "color:#fff;")
+        self.pushButton_4.setText('قرض دادن')
         icon3 = QIcon()
         icon3.addFile(u"./images/editing.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButton_4.setIcon(icon3)
@@ -152,6 +153,7 @@ class Ui_MainWindow(object):
 "font-weight: bold;\n"
 "background-color: rgb(186, 0, 0);\n"
 "color:#fff;")
+        self.pushButton_5.setText('گزارش ها')
         icon4 = QIcon()
         icon4.addFile(u"./images/trash.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButton_5.setIcon(icon4)
@@ -204,7 +206,7 @@ class Ui_MainWindow(object):
         else:
             messagebox.showerror('Error' , 'تمامی موارد را با دقت وارد کنید')
     def search_book(self):
-        self.clear_layout(self.scroll_layout)
+        self.clear_layout()
         title = self.lineEdit.text()
         res = search_for_title(title)
         for item in res:
@@ -224,21 +226,19 @@ class Ui_MainWindow(object):
             delete_button =QPushButton(self.scrollAreaWidgetContents)
             delete_button.setIcon(QIcon('./images/delete.png'))
             delete_button.setStyleSheet(u"border:none")
-            # layout = QVBoxLayout()
             sub_layout = QHBoxLayout()
             sub_layout.addWidget(delete_button)
             sub_layout.addWidget(edit_button)
             sub_layout.addWidget(book_label)
-            # layout.addLayout(sub_layout)
             self.scroll_layout.addLayout(sub_layout)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-    def clear_layout(self , layout):
-        for i in reversed(range(layout.count())):
-            widget = self.scroll_layout.itemAt(i)
-            widget.setParent(None)
+    def clear_layout(self):
+        self.scrollAreaWidgetContents = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.scroll_layout.setAlignment(Qt.AlignTop)
     def search_category(self):
-        self.clear_layout(self.scroll_layout)
+        self.clear_layout()
         category = self.lineEdit_4.text()
         res = search_for_category(category=category)
         for item in res:
@@ -266,8 +266,8 @@ class Ui_MainWindow(object):
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u" \u062b\u0628\u062a \u06a9\u062a\u0627\u0628 \u062c\u062f\u06cc\u062f", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"\u062c\u0633\u062a\u062c\u0648\u06cc \u0639\u0646\u0648\u0627\u0646", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"\u062c\u0633\u062a\u062c\u0648\u06cc \u0628\u0631 \u0627\u0633\u0627\u0633 \u062f\u0633\u062a\u0647 \u0628\u0646\u062f\u06cc", None))
-        self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"\u0648\u06cc\u0631\u0627\u06cc\u0634  \u06a9\u062a\u0627\u0628", None))
-        self.pushButton_5.setText(QCoreApplication.translate("MainWindow", u"\u062d\u0630\u0641 \u06a9\u062a\u0627\u0628", None))
+        # self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"\u0648\u06cc\u0631\u0627\u06cc\u0634  \u06a9\u062a\u0627\u0628", None))
+        # self.pushButton_5.setText(QCoreApplication.translate("MainWindow", u"\u062d\u0630\u0641 \u06a9\u062a\u0627\u0628", None))
         # self.label_5.setText(QCoreApplication.translate("MainWindow", u"\u0639\u0646\u0648\u0627\u0646 \u06a9\u062a\u0627\u0628", None))
     # retranslateUi
 
