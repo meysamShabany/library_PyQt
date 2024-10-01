@@ -168,10 +168,12 @@ class Ui_MainWindow(object):
         self.scrollArea = QScrollArea(self.frame_3)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setGeometry(QRect(9, 9, 541, 351))
-        self.scrollArea.setWidgetResizable(True,)
+        self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scrollAreaWidgetContents = QWidget()
         self.scroll_layout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.scroll_layout.setAlignment(Qt.AlignTop)
+        # self.scroll_layout.set
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -210,18 +212,31 @@ class Ui_MainWindow(object):
             book_label = QLabel(title_label)
             book_label.setText(title_label)
             book_label.setFixedHeight(50)
+            book_label.setFixedWidth(450)
             book_label.setGeometry(QRect(20, 20, 501, 41))
             book_label.setStyleSheet(u"background-color: lightgreen;\n"
                                        "font-size:14px;\n"
                                        "padding-right:20px;\n"
                                        "font-weight: bold;margin:2px;")
-            self.scroll_layout.addWidget(book_label)
+            edit_button = QPushButton(self.scrollAreaWidgetContents)
+            edit_button.setIcon(QIcon('./images/editing.png'))
+            edit_button.setStyleSheet(u"border:none;")
+            delete_button =QPushButton(self.scrollAreaWidgetContents)
+            delete_button.setIcon(QIcon('./images/delete.png'))
+            delete_button.setStyleSheet(u"border:none")
+            # layout = QVBoxLayout()
+            sub_layout = QHBoxLayout()
+            sub_layout.addWidget(delete_button)
+            sub_layout.addWidget(edit_button)
+            sub_layout.addWidget(book_label)
+            # layout.addLayout(sub_layout)
+            self.scroll_layout.addLayout(sub_layout)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
     def clear_layout(self , layout):
         for i in reversed(range(layout.count())):
-            item = layout.itemAt(i)
-            item.widget().setParent(None)
+            widget = self.scroll_layout.itemAt(i)
+            widget.setParent(None)
     def search_category(self):
         self.clear_layout(self.scroll_layout)
         category = self.lineEdit_4.text()
@@ -236,6 +251,7 @@ class Ui_MainWindow(object):
                                      "font-size:14px;\n"
                                      "padding-right:20px;\n"
                                      "font-weight: bold;margin:2px;")
+
             self.scroll_layout.addWidget(book_label)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
