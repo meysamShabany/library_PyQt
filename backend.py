@@ -49,3 +49,14 @@ def search_for_category(category):
         return res
     except Exception as err:
         return err
+
+def delete_from_database(id):
+    try:
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM books WHERE id=?", (id,))
+        connection.commit()
+        connection.close()
+        return 'delete success'
+    except:
+        return None

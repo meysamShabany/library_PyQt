@@ -8,6 +8,8 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 import sys
+
+import backend
 from backend import *
 from PyQt5.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
     QRect, QSize, QUrl, Qt)
@@ -198,23 +200,28 @@ class Ui_MainWindow(object):
         if len(title.strip()) > 2 and len(author.strip()) > 2 and len(isnb.strip()) > 3 and len(category.strip()) > 2:
             res = add_book(title=title , author=author , isnb=isnb , category=category)
             if res =="success":
-                messagebox.showinfo('Success' , f'کتاب {title}  با موفقیت اضافه شد')
+                mess:QMessageBox = QMessageBox.information(None, 'موفق', 'کتاب با موفقیت اضافه شد')
+                # messagebox.showinfo('Success' , f'کتاب {title}  با موفقیت اضافه شد')
                 self.lineEdit.setText('')
                 self.lineEdit_2.setText('')
                 self.lineEdit_3.setText('')
                 self.lineEdit_4.setText('')
         else:
-            messagebox.showerror('Error' , 'تمامی موارد را با دقت وارد کنید')
+            mess = QMessageBox.critical(None, 'Error', 'تمامی موارد را با دقت وارد کنید')
+            # messagebox.showerror('Error' , 'تمامی موارد را با دقت وارد کنید')
     def search_book(self):
         self.clear_layout()
         title = self.lineEdit.text()
         res = search_for_title(title)
+        # dic = {}
         for item in res:
+            # id_book = item[0]/
             title_label = item[1]
             book_label = QLabel(title_label)
             book_label.setText(title_label)
             book_label.setFixedHeight(50)
             book_label.setFixedWidth(450)
+            # dic.update({book_label.text(): id_book})
             book_label.setGeometry(QRect(20, 20, 501, 41))
             book_label.setStyleSheet(u"background-color: lightgreen;\n"
                                        "font-size:14px;\n"
@@ -223,9 +230,12 @@ class Ui_MainWindow(object):
             edit_button = QPushButton(self.scrollAreaWidgetContents)
             edit_button.setIcon(QIcon('./images/editing.png'))
             edit_button.setStyleSheet(u"border:none;")
+            edit_button.setCursor(QCursor(Qt.PointingHandCursor))
             delete_button =QPushButton(self.scrollAreaWidgetContents)
             delete_button.setIcon(QIcon('./images/delete.png'))
             delete_button.setStyleSheet(u"border:none")
+            delete_button.setCursor(QCursor(Qt.PointingHandCursor))
+            delete_button.clicked.connect(lambda checked , book_id = item[0]: self.delete_book(book_id))
             sub_layout = QHBoxLayout()
             sub_layout.addWidget(delete_button)
             sub_layout.addWidget(edit_button)
@@ -242,18 +252,45 @@ class Ui_MainWindow(object):
         category = self.lineEdit_4.text()
         res = search_for_category(category=category)
         for item in res:
+            print(item)
+            id_book = item[0]
             title_label = item[1]
             book_label = QLabel(title_label)
             book_label.setText(title_label)
             book_label.setFixedHeight(50)
+            book_label.setFixedWidth(450)
             book_label.setGeometry(QRect(20, 20, 501, 41))
             book_label.setStyleSheet(u"background-color: lightgreen;\n"
                                      "font-size:14px;\n"
                                      "padding-right:20px;\n"
                                      "font-weight: bold;margin:2px;")
-
-            self.scroll_layout.addWidget(book_label)
+            edit_button = QPushButton(self.scrollAreaWidgetContents)
+            edit_button.setIcon(QIcon('./images/editing.png'))
+            edit_button.setStyleSheet(u"border:none;")
+            edit_button.setCursor(QCursor(Qt.PointingHandCursor))
+            delete_button = QPushButton(self.scrollAreaWidgetContents)
+            delete_button.setIcon(QIcon('./images/delete.png'))
+            delete_button.setStyleSheet(u"border:none;cursor:pointer;")
+            delete_button.setCursor(QCursor(Qt.PointingHandCursor))
+            delete_button.clicked.connect(lambda checked , book_id = item[0]: self.delete_book(book_id))
+            sub_layout = QHBoxLayout()
+            sub_layout.addWidget(delete_button)
+            sub_layout.addWidget(edit_button)
+            sub_layout.addWidget(book_label)
+            self.scroll_layout.addLayout(sub_layout)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+    def delete_book(self , id):
+        reply = QMessageBox.question(None , 'حذف کتاب' , 'آیا از حذف کتاب اطمینان دارید ؟' , QMessageBox.Yes | QMessageBox.No , QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            result = backend.delete_from_database(id)
+            if result:
+                QMessageBox.information(None, 'موفق', 'کتاب با موفقیت حذف شد')
+            else:
+                QMessageBox.warning(None, 'ناموفق', 'عملیات حذف با شکست مواجه شد')
+        else:
+            print('no')
+
+
 
     # setupUi
 
